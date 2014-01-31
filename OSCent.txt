@@ -57,4 +57,4 @@ cd ossec-hids-*
 ./install.sh
 
 #Final Files
-find . | xargs -I file lsattr -a file 2>/dev/null | grep '^....i'
+#find . | xargs -I file lsattr -a file 2>/dev/null | grep '^....i'
