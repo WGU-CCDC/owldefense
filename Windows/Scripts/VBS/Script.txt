@@ -1,0 +1,118 @@
+Set WshShell = WScript.CreateObject("WScript.Shell")
+If WScript.Arguments.length = 0 Then
+Set ObjShell = CreateObject("Shell.Application")
+ObjShell.ShellExecute "wscript.exe", """" & _
+WScript.ScriptFullName & """" &_
+ " RunAsAdministrator", , "runas", 1
+Else
+
+Do While X = 0
+	strChoice = InputBox("Select section to secure. 'R' notation means restart required during process." & vbCrLf & vbCrLf & _
+		" 1)  Account - Admin Password" & vbCrLf & _
+		" 2)  Account - Guest Password" & vbCrLf & _
+		" 3)  Account - Maintenance" & vbCrLf & _
+		" 4)  Remote - Admin Access" & vbCrLf & _
+		" 5)  Remote - Firewall" & vbCrLf & _
+		" 6)  Vulnerability - Notepad" & vbCrLf & _
+		" 7)  Vulnerability - Browser" & vbCrLf & _
+		" 8)  Vulnerability - Memory (R)" & vbCrLf & _
+		" 9)  Vulnerability - Services (R)" & vbCrLf & _
+		" 10) Vulnerability - Updates (R)" & vbCrLf & _
+		" 11) Security - Wizard" & vbCrLf & _
+		" 12) Security - Analyzer" & vbCrLf & _
+		" 12) Security - Logging" & vbCrLf & _
+		" 14) Info - System Info" & vbCrLf & _
+		" 15) Info - Check Status" & vbCrLf & vbCrLf & _
+		" A) Secure All", "Auto Secure Script")
+	
+	If strChoice = "" Then
+		Exit Do
+	End If
+		
+	'Change Admin Password
+	If strChoice = "1" Then
+		strPassword = InputBox("Please enter password for Administrator.", "Administrator Password")
+		If strPassword <> "" Then
+		    ErrorCode = ChangePassword ("Administrator",strPassword)
+		End If
+	End If
+		
+	'Change Guest Password
+	If strChoice = "2" Then
+		strPassword = InputBox("Please enter password for Guest.", "Guest Password")
+		If strPassword <> "" Then
+		    ErrorCode = ChangePassword ("Guest",strPassword)
+		End If
+	End If
+
+	'Account Maintenance - Disable Guest Account
+	If strChoice = "3" Then
+		ErrorCode = WshShell.Run("%windir%\system32\net user Guest /active:no", 1, true)
+	End If
+	
+	'Remote Admin - Disable Remote Access Tools, Disable Powershell Execution
+	If strChoice = "4" Then
+		ErrorCode = WshShell.Run("%windir%\system32\net share C$ /d", 1, true)
+		ErrorCode = WshShell.Run("%windir%\system32\net share ADMIN$ /d", 1, true)
+		ErrorCode = WshShell.Run("%windir%\system32\REG ADD 'HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters' /v AutoShareServer /t REG_DWORD /d 00000000 /f", 1, true)
+	End If
+	
+	'Setup Firewall
+	If strChoice = "5" Then
+		ErrorCode = WshShell.Run("%windir%\system32\netsh firewall set opmode mode=ENABLE exceptions=DISABLE", 1, true)
+		ErrorCode = WshShell.Run("%windir%\system32\netsh firewall add portopening all 9997 Splunk mode=enable scope=all profile=all", 1, true)
+	End If
+	
+	'Launch Windows Update
+	If strChoice = "9" Then
+		ErrorCode = WshShell.Run("%windir%\system32\wuauclt /ShowWUAutoScan", 1, true)
+	End If
+	
+	'View System Information
+	If strChoice = "14" Then
+		DisplayStats()
+	End If
+	
+Loop
+Set WshShell = Nothing
+End If
+
+
+Function ChangePassword(Account,Password)
+	ErrorCode = WshShell.Run("%windir%\system32\net user Moody " & strAdmPassword, 1, true)
+	Y = msgbox("Returns: " & Return, 0, "Returned Value")
+	If ErrorCode <> 0 Then
+		ErrorCode = WshShell.Run("%windir%\system32\net user Administrator " & strAdmPassword & " /Domain", 1, true)
+	End If
+	ChangePassword = ErrorCode
+End Function
+
+Function DisplayStats()
+	Set dtmConvertedDate = CreateObject("WbemScripting.SWbemDateTime")
+	strComputer = "."
+	Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+	Set oss = objWMIService.ExecQuery ("Select * from Win32_OperatingSystem")
+
+	For Each os in oss
+		dtmConvertedDate.Value = os.InstallDate
+		dtmInstallDate = dtmConvertedDate.GetVarDate
+		ErrorCode = MsgBox ("Boot Device: " & os.BootDevice & vbCrLf & _
+		"Build Number: " & os.BuildNumber & vbCrLf & _
+		"Build Type: " & os.BuildType & vbCrLf & _
+		"Caption: " & os.Caption & vbCrLf & _
+		"Code Set: " & os.CodeSet & vbCrLf & _
+		"Country Code: " & os.CountryCode & vbCrLf & _
+		"Debug: " & os.Debug & vbCrLf & _
+		"Encryption Level: " & os.EncryptionLevel & vbCrLf & _
+		"Install Date: " & dtmInstallDate  & vbCrLf & _
+		"Licensed Users: " & os.NumberOfLicensedUsers & vbCrLf & _
+		"Organization: " & os.Organization & vbCrLf & _
+		"OS Language: " & os.OSLanguage & vbCrLf & _
+		"OS Product Suite: " & os.OSProductSuite & vbCrLf & _
+		"OS Type: " & os.OSType & vbCrLf & _
+		"Primary: " & os.Primary & vbCrLf & _
+		"Registered User: " & os.RegisteredUser & vbCrLf & _
+		"Serial Number: " & os.SerialNumber & vbCrLf & _
+		"Version: " & os.Version, 0, "System Summary")
+	Next
+End Function

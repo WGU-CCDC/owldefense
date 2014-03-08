@@ -1,0 +1,11 @@
+#!/bin/bash
+# Script Name: rhel-iptables.sh
+
+./iptables-rules
+
+# Save the rules and restart the firewall
+/sbin/iptables-save | sudo tee /etc/sysconfig/iptables
+service iptables restart
+
+# Run iptables on startup
+chkconfig iptables on

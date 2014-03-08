@@ -1,0 +1,3 @@
+#!/bin/bash
+# Restores iptables rules when network interface comes up
+/sbin/iptables-restore < /etc/iptables.up.rules
