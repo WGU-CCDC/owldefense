@@ -1,0 +1,40 @@
+1. insert install dvd.
+
+2. boot to dvd.
+
+3. Select language. Hit next.
+
+4. Bottom left corner, repair computer
+
+5. Command prompt
+
+6. cd /d c:\windows\system32
+
+7. move utilman.exe utilman.exe.bak
+
+8. copy cmd.exe utilman.exe
+
+9. shutdown /r /t 0 /f
+
+10. Select the Ease of Access tool in the bottom left(circlish looking thing).
+
+11. net user administrator *
+
+*note* this is for the case where administrator is the superuser. You may have to run net user to get a list of users, then net user X to find the admin.
+
+12. Enter in new password.
+
+13. Close the command prompt and login.
+
+
+And if for some reason that fails, use something to blank the password:
+
+with ISO
+
+http://pogostick.net/~pnh/ntpasswd/
+
+To put onto a flash drive
+
+http://unetbootin.sourceforge.net/
+
+source: http://www.howtogeek.com/106333/how-to-reset-your-forgotten-domain-admin-password-on-server-2008-r2/
