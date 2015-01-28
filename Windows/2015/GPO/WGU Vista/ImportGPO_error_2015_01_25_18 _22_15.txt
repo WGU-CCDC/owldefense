@@ -1,2 +1,0 @@
-Import GPO had with the following errors. This can result from improper manual modification of GPO backup files. Always make changes to GPOs using GPMC, and regenerate the GPO backup if necessary.
-Either Backup.xml or bkupInfo.xml does not exist.
