@@ -9,3 +9,5 @@ WindowsServer2003-KB958644-ia64-ENU /passive /norestart
 WindowsServer2003-KB978251-ia64-ENU /passive /norestart
 
 WindowsServer2003-KB2621440-ia64-ENU /passive /norestart
+
+WindowsServer2003-KB823980-ia64-ENU /passive /norestart
