@@ -1,0 +1,95 @@
+DNS
+
+Running a Recursive DNS Server
+-------------------------------
+
+In addition to authorative server, maradns can also funcation as a recursive DNS server. 
+
+To run a recursive server, add/modify lines in the config file.
+    # vim /etc/maradns/mararc
+
+        bind_address = "50.3.1.8"
+
+        chroot_dir = "/etc/maradns"
+
+        # Uncomment this line if commented.
+        ipv4_alias = {}
+
+        # Here you define the forwarders which in most cases are the providers DNS server Its
+        # or Public DNS Servers. We're using Google DNS for this purpse
+        upstream_servers = {}
+        upstream_servers["."] = “10.16.242.201 8.8.8.8"
+
+        # Hosts allowed to perform recursive queries
+        recursive_acl = "192.168.51.0/24"
+
+Simply add a logging {} config block (as described in the Bind 9 Configuration Reference) then set your system to use 127.0.0.1 or ::1 as the DNS resolver.
+
+DNS repeater
+If you want MaraDNS to act like dnsmasq, as a recursive and/or authoritative DNSserver edit /etc/mararc:
+recursive_acl="192.168.1.0/24"
+
+
+
+
+Configuration
+
+The only configuration file is /etc/marac.
+There four executables: maradns, askmara, zoneserver and getzone.
+
+
+Mysql
+
+User correctly authenticated:
+Shell
+1
+2
+121227  8:31:49    38 Connect root@localhost on
+
+
+   38 Query select @@version_comment limit 1
+
+
+User not correctly authenticated:
+Shell
+1
+2
+121227  8:32:18    39 Connect root@localhost on
+
+
+   39 Connect Access denied for user 'root'@'localhost' (using password: YES)
+
+
+
+
+Error log
+If you only care about failed attempts to login then there is another different and less problematic approach. From 5.5 it’s possible to log access denied messages to the error log.
+We just need to enable log_warnings with a value greater than 1:
+Shell
+1
+log_warnings = 2
+
+
+Then check the error log:
+Shell
+1
+121227  8:44:21 [Warning] Access denied for user 'root'@'localhost' (using password: YES)
+
+
+
+
+Email
+
+/var/log/mail.log
+
+IMAP4/SSL                  993 (TCP)
+IMAP4 with or without TLS  143 (TCP)   
+POP3/SSL                   995 (TCP)   
+POP3 with or without TLS   110 (TCP)
+
+ssh.connect(hostname, port=port, username=username,
+
+
+
+
+password=password, timeout=timeout)
