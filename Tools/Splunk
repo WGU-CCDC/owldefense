@@ -1,3 +1,17 @@
+Splunk Enterprise Links:
+
+Windows:
+
+32Bit
 http://download.splunk.com/products/splunk/releases/6.5.2/splunk/windows/splunk-6.5.2-67571ef4b87d-x86-release.msi
 
+64Bit
 http://download.splunk.com/products/splunk/releases/6.5.2/splunk/windows/splunk-6.5.2-67571ef4b87d-x64-release.msi
+
+Linux:
+
+64Bit
+http://download.splunk.com/products/splunk/releases/6.5.2/splunk/linux/splunk-6.5.2-67571ef4b87d-Linux-x86_64.tgz
+http://download.splunk.com/products/splunk/releases/6.5.2/splunk/linux/splunk-6.5.2-67571ef4b87d-Linux-x86_64.rpm
+http://download.splunk.com/products/splunk/releases/6.5.2/splunk/linux/splunk-6.5.2-67571ef4b87d-Linux-x86_64.deb
+
